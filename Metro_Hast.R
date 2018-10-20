@@ -27,7 +27,7 @@ likelihood <- function(param){
 }
 
 # Example: plot the likelihood profile of the slope a
-
+par(mfrow=c(1,1))
 slopevalues <- function(x){return(likelihood(c(x, trueB, trueSd)))}
 #the function slopevalues inputs slope of the model and returns value of log likelihood function 
 #calculated with test data, given slope x, fixed intercept and sd of error
@@ -91,38 +91,20 @@ acceptance = 1-mean(duplicated(chain[-(1:burnIn),]))
 #calculate the rate of acceptance from burnIn+1 to 10000 iterations
 
 ### Summary: #######################
-
-par(mfrow = c(2,3))#draw 2*3 plots
-hist(chain[-(1:burnIn),1],nclass=30, main="Posterior of a", xlab="True value = red line" )
-#hist samples of a we draw from posterior distribution
-abline(v = mean(chain[-(1:burnIn),1]))
-#label mean value of sample a we draw
-abline(v = trueA, col="red" )
-#label real a
-hist(chain[-(1:burnIn),2],nclass=30, main="Posterior of b", xlab="True value = red line")
-#hist samples of b we draw from posterior distribution
-abline(v = mean(chain[-(1:burnIn),2]))
-#label mean value of sample b we draw
-abline(v = trueB, col="red" )
-#label real b
-hist(chain[-(1:burnIn),3],nclass=30, main="Posterior of sd", xlab="True value = red line")
-#hist samples of sd we draw from posterior distribution
-abline(v = mean(chain[-(1:burnIn),3]) )
-#label mean value of sample sd we draw
-abline(v = trueSd, col="red" )
-#label real sd
-plot(chain[-(1:burnIn),1], type = "l", xlab="True value = red line" , main = "Chain values of a" )
-#plot samples of a we draw from posterior(give up burnIn numbers) with x = index
-abline(h = trueA, col="red" )
-#label real a
-plot(chain[-(1:burnIn),2], type = "l", xlab="True value = red line" , main = "Chain values of b")
-#plot samples of b we draw from posterior(give up burnIn numbers) with x = index
-abline(h = trueB, col="red" )
-#label real b
-plot(chain[-(1:burnIn),3], type = "l", xlab="True value = red line" , main = "Chain values of sd")
-#plot samples of sd we draw from posterior(give up burnIn numbers) with x = index
-abline(h = trueSd, col="red" )
-#label real sd
+summary <- function(chain,burnIn,classnum,truevalue){
+  num <- ncol(chain)
+  par(mfrow=c(2,num))
+  for(i in 1:num){
+    hist(chain[-(1:burnIn),i],nclass=classnum, main=paste("Posterior of param",i), xlab="True value = red line" )
+    abline(v = mean(chain[-(1:burnIn),i]))
+    abline(v = truevalue[i], col="red" )
+  }
+  for(i in 1:num){
+    plot(chain[-(1:burnIn),1], type = "l", xlab="True value = red line" , main = paste("Chain values of param",i) )
+    abline(h = truevalue[i], col="red" )
+  }
+}
+summary(chain,burnIn,30,c(5,0,10))
 
 # for comparison:
 summary(lm(y~x))#result of linear regression
