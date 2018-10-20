@@ -64,7 +64,7 @@ run_metropolis_MCMC <- function(startvalue, iterations){
 
 
 ### Summary: #######################
-summary <- function(chain,burnIn,classnum,truevalue){
+graphing <- function(chain,burnIn,classnum,truevalue){
   num <- length(truevalue)
   par(mfrow=c(2,num))
   for(i in 1:num){

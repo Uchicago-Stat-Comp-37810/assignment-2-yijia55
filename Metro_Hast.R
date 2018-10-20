@@ -28,7 +28,7 @@ burnIn = 5000 #number to give up
 acceptance = 1-mean(duplicated(chain[-(1:burnIn),]))
 #calculate the rate of acceptance from burnIn+1 to 10000 iterations
 
-summary(chain,burnIn,30,c(5,0,10))
+graphing(chain,burnIn,30,c(5,0,10))
 
 # for comparison:
 summary(lm(y~x))#result of linear regression
