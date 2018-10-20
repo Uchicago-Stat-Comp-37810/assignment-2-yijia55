@@ -1,0 +1,45 @@
+---
+title: "Comparing accuracy for different numbers of iterations"
+author: "Yijia Zhao"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+To start, we first need to define true values and get data points from our model.
+```{r}
+trueA <- 5 
+trueB <- 0
+trueSd <- 10
+sampleSize <- 31 
+x <- (-(sampleSize-1)/2):((sampleSize-1)/2)
+y <-  trueA * x + trueB + rnorm(n=sampleSize,mean=0,sd=trueSd)
+```
+
+With these data points, we can get the functions denfined in functionsforMH.R to work.
+
+To compare the accuracy of Metropolis-Hastings algorithm in finding a for different iteration times, we first define the compare_outcomes function which takes iteration times as input and run a loop of 10 to print mean and std of a for each chain with that iteration times. Then we give different input and can get different results to compare accuracy.
+
+```{r}
+source("functionsforMH.R")
+set.seed(1)
+compare_outcomes <- function(iterations){
+  for (i in 1:10){
+    a<-runif(1,0,10)
+    b<-rnorm(1,0,1)
+    c<-runif(1,1,20)
+    startvalue <- c(a,b,c)
+    chain <- run_metropolis_MCMC(startvalue,iterations)
+    print(c(mean(chain[,1]),sqrt(var(chain[,1]))))
+  }
+}
+compare_outcomes(1000)
+compare_outcomes(10000)
+compare_outcomes(100000)
+```
+The first column is mean for a of each loop and the second column is std. The true value for a is 5.
+
+From the results, we can generally see that std gets smaller and the mean value gets closer to 5 as iteration times becomes larger, which means the results become more and more accurate and stable as iteration times increases. We can also see that the results of iterations=10000 and iterations=100000 are close to each other in reality. So there is no need to use very large iterations if we have decided how accurate we want. We can choose iteration times as we need.
+

@@ -32,3 +32,20 @@ graphing(chain,burnIn,30,c(5,0,10))
 
 # for comparison:
 summary(lm(y~x))#result of linear regression
+
+########function for comparing outcomes#############
+#The function inputs iteration times and print the mean and std of result of MH algorithm for parameter a
+compare_outcomes <- function(iterations){
+  for (i in 1:10){
+    a<-runif(1,0,10)#random startvalue of a
+    b<-rnorm(1,0,1)#random startvalue of b
+    c<-runif(1,1,20)#random startvalue of c
+    startvalue <- c(a,b,c)#startvalue
+    chain <- run_metropolis_MCMC(startvalue,iterations)#run MCMC to get chain of param
+    print(c(mean(chain[,1]),sqrt(var(chain[,1]))))#print mean and std of a
+  }
+}
+
+compare_outcomes(1000)
+compare_outcomes(10000)
+compare_outcomes(100000)
